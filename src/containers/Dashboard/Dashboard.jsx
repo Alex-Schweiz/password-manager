@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
   }
 
   getPasswords() {
-    let downloadUrl = 'https://psswrds-de8fc.firebaseio.com/passwords.json';
+    let downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
     axios.get(downloadUrl)
       .then(response => {
         console.log(response);
@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
 
   deletePassword = () => {
     let idToDelete = this.state.idDelete;
-    let deleteUrl = `https://psswrds-de8fc.firebaseio.com/passwords/${idToDelete}.json`;
+    let deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
     axios.delete(deleteUrl)
       .then(response => {
         console.log(response);
@@ -86,7 +86,7 @@ class Dashboard extends React.Component {
   };
 
   postPasswordItem = (postObject) => {
-    let downloadUrl = 'https://psswrds-de8fc.firebaseio.com/passwords.json';
+    let downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
     axios.post(downloadUrl, postObject)
       .then(response => {
         console.log(response);
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
   };
 
   updateItem = (updateObject, id) => {
-    let downloadUrl = `https://psswrds-de8fc.firebaseio.com/passwords/${id}.json`;
+    let downloadUrl = `https://react-password-manager-7.firebaseio.com/passwords/${id}.json`;
     axios.put(downloadUrl, updateObject)
       .then(response => {
         console.log(response);
