@@ -9,6 +9,8 @@ export default function SignOutButton () {
       href="#"
       onClick={auth.doSignOut}
       className="text-white"
-    >Log out</NavLink>
+    >
+      Log out
+    </NavLink>
   )
 };

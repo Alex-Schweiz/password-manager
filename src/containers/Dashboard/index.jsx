@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Button, Table, Row } from 'reactstrap';
 
-import Layout from '../../hoc/dashboardLayout';
+import Layout from '../../components/DashboardLayout';
 import TableRow from '../TableRow';
 import FormModal from '../FormModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';

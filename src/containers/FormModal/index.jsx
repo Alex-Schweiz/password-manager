@@ -40,7 +40,6 @@ export default class FormModal extends React.Component {
    */
   handleSaveForm() {
     let savedForm = this.state.passwordItem;
-    console.log(savedForm);
     if(this.state.passwordItem.id) {
       this.props.updateItem(savedForm, this.state.passwordItem.id);
     } else {
@@ -50,6 +49,13 @@ export default class FormModal extends React.Component {
   };
 
   render() {
+    const {
+      target,
+      password
+    } = this.state;
+
+    const isInvalid = password === '' || target === '';
+
     return (
       <Modal isOpen={this.props.showModal} toggle={this.props.toggleShowModal}>
         <ModalHeader toggle={this.toggle}>{this.props.activePassword.target === '' ? "Add" : "Edit" } a password</ModalHeader>
@@ -91,8 +97,19 @@ export default class FormModal extends React.Component {
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={() => this.handleSaveForm()}>Save</Button>{' '}
-          <Button color="secondary" onClick={this.props.cancelButton}>Cancel</Button>
+          <Button
+            color="success"
+            onClick={() => this.handleSaveForm()}
+            disabled={isInvalid}
+          >
+            Save
+          </Button>{' '}
+          <Button
+            color="secondary"
+            onClick={this.props.cancelButton}
+          >
+            Cancel
+          </Button>
         </ModalFooter>
       </Modal>
     )

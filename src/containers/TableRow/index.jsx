@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   tooltipIsOpen: false
 };
 
-export default class tableRow extends React.Component {
+export default class TableRow extends React.Component {
   constructor(props) {
     super(props);
 

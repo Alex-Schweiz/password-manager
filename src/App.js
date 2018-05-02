@@ -13,11 +13,9 @@ import SignUpPage from './components/SignUpPage';
 import SignInPage from './components/SignInPage';
 
 class App extends Component {
-  state = {
-    authUser: null
-  };
+  state = {authUser: null};
 
-  componentDidMount() {
+  componentWillMount() {
     firebase.auth.onAuthStateChanged(authUser => {
       authUser
         ? this.setState(() => ({ authUser }))

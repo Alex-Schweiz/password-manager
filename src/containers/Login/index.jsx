@@ -4,7 +4,7 @@ import { Form, FormGroup, Input, Button } from 'reactstrap';
 
 import { auth } from '../../firebase';
 import * as routes from '../../constants/routes';
-import FormLayout from '../../hoc/formLayout';
+import FormLayout from '../../components/FormLayout';
 
 const INITIAL_STATE = {
   email: '',

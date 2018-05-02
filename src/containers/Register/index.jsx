@@ -3,7 +3,7 @@ import { Form, FormGroup, Input, Button } from 'reactstrap';
 
 import * as routes from '../../constants/routes';
 import { auth } from '../../firebase';
-import FormLayout from '../../hoc/formLayout';
+import FormLayout from '../../components/FormLayout';
 
 const INITIAL_STATE = {
   username: '',
