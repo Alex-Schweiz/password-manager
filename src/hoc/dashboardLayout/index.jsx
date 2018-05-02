@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 
-import SignOutButton from '../../components/SignOutButton/SignOutButton';
+import SignOutButton from '../../components/SignOutButton';
 
 export default class Layout extends React.Component {
   render () {

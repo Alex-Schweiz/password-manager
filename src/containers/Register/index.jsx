@@ -1,14 +1,15 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import { Form, FormGroup, Input, Button } from 'reactstrap';
 
-import { auth } from '../../firebase';
 import * as routes from '../../constants/routes';
-import FormLayout from '../../hoc/formLayout/formLayout';
+import { auth } from '../../firebase';
+import FormLayout from '../../hoc/formLayout';
 
 const INITIAL_STATE = {
+  username: '',
   email: '',
-  password: '',
+  passwordOne: '',
+  passwordTwo: '',
   error: null,
 };
 
@@ -16,7 +17,7 @@ const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value,
 });
 
-export default class Login extends React.Component {
+export default class Register extends React.Component {
   constructor(props) {
     super(props);
 
@@ -25,7 +26,6 @@ export default class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-
   /**
    * Handle submit button
    * @param event
@@ -33,15 +33,15 @@ export default class Login extends React.Component {
   onSubmit(event) {
     const {
       email,
-      password,
+      passwordOne
     } = this.state;
 
     const {history} = this.props;
 
-    auth.doSignInWithEmailAndPassword(email, password)
-      .then(() => {
+    auth.doCreateUserWithEmailAndPassword(email, passwordOne)
+      .then(authUser => {
         this.setState(() => ({ ...INITIAL_STATE }));
-        history.push(routes.DASHBOARD);
+        history.push(routes.LOGIN);
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
@@ -52,16 +52,30 @@ export default class Login extends React.Component {
 
   render() {
     const {
+      username,
       email,
-      password,
+      passwordOne,
+      passwordTwo,
       error
     } = this.state;
 
-    const isInvalid = password === '' || email === '';
+    const isInvalid =
+      passwordOne !== passwordTwo ||
+      passwordOne === '' ||
+      email === '' ||
+      username === '';
 
     return (
       <FormLayout>
         <Form onSubmit={this.onSubmit}>
+          <FormGroup>
+            <Input
+              value={username}
+              onChange={event => this.setState(byPropKey('username', event.target.value))}
+              type="text"
+              placeholder="Full Name"
+            />
+          </FormGroup>
           <FormGroup>
             <Input
               value={email}
@@ -72,18 +86,25 @@ export default class Login extends React.Component {
           </FormGroup>
           <FormGroup>
             <Input
-              value={password}
-              onChange={event => this.setState(byPropKey('password', event.target.value))}
+              value={passwordOne}
+              onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
               type="password"
               placeholder="Password"
             />
           </FormGroup>
-          <Button disabled={isInvalid} color="primary" block>Log in</Button>
+          <FormGroup>
+            <Input
+              value={passwordTwo}
+              onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
+              type="password"
+              placeholder="Confirm Password"
+            />
+          </FormGroup>
+          <Button disabled={isInvalid} type="submit" color="primary" block>Register</Button>
           { error && <p>{error.message}</p> }
         </Form>
-        <p>No account? Click here to</p>
-        <Link to="/register">Register</Link>
       </FormLayout>
     )
   }
 }
+

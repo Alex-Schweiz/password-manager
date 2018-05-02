@@ -2,10 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import { Button, Table, Row } from 'reactstrap';
 
-import Layout from '../../hoc/dashboardLayout/dashboardLayout';
-import TableRow from '../TableRow/TableRow';
-import FormModal from '../FormModal/FormModal';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
+import Layout from '../../hoc/dashboardLayout';
+import TableRow from '../TableRow';
+import FormModal from '../FormModal';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 const INITIAL_STATE = {
   isLoading: false,
@@ -61,11 +61,10 @@ export default class Dashboard extends React.Component {
   };
 
   getPasswords() {
-    let downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
+    const downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
     axios.get(downloadUrl)
       .then(response => {
-        console.log(response);
-        let arrayToPush = Object.keys(response.data)
+        const arrayToPush = Object.keys(response.data)
           .map(i => {
             return {
               ...response.data[i],
@@ -77,11 +76,9 @@ export default class Dashboard extends React.Component {
   };
 
   postPasswordItem = (postObject) => {
-    let downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
+    const downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
     axios.post(downloadUrl, postObject)
       .then(response => {
-        console.log(response);
-        console.log(postObject);
         if(response.status === 200) {
           this.getPasswords();
         }
@@ -90,11 +87,9 @@ export default class Dashboard extends React.Component {
   };
 
   updateItem = (updateObject, id) => {
-    let downloadUrl = `https://react-password-manager-7.firebaseio.com/passwords/${id}.json`;
+    const downloadUrl = `https://react-password-manager-7.firebaseio.com/passwords/${id}.json`;
     axios.put(downloadUrl, updateObject)
       .then(response => {
-        console.log(response);
-        console.log(updateObject);
         if(response.status === 200) {
           this.getPasswords();
         }
@@ -103,11 +98,10 @@ export default class Dashboard extends React.Component {
   };
 
   deletePassword = () => {
-    let idToDelete = this.state.idDelete;
-    let deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
+    const idToDelete = this.state.idDelete;
+    const deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
     axios.delete(deleteUrl)
       .then(response => {
-        console.log(response);
         if(response.status === 200) {
           this.getPasswords();
         }
@@ -165,9 +159,6 @@ export default class Dashboard extends React.Component {
           {tableRow}
           </tbody>
         </Table>
-        {/*<Alert color="primary">
-          This is a primary alert — check it out!
-        </Alert>*/}
       </Layout>
     )
   }

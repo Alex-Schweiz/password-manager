@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Login from '../../containers/Login/Login'
+import Login from '../../containers/Login'
 import {withRouter} from "react-router-dom";
 
 const SignUpPage = ({ history }) =>

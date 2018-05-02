@@ -8,9 +8,9 @@ import {
 import * as routes from './constants/routes';
 import { firebase } from './firebase';
 
-import Dashboard from './containers/Dashboard/Dashboard';
-import SignUpPage from './components/SignUpPage/SignUpPage';
-import SignInPage from './components/SignInPage/SignInPage';
+import Dashboard from './containers/Dashboard';
+import SignUpPage from './components/SignUpPage';
+import SignInPage from './components/SignInPage';
 
 class App extends Component {
   state = {

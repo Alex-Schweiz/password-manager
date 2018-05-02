@@ -1,15 +1,14 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { Form, FormGroup, Input, Button } from 'reactstrap';
 
-import * as routes from '../../constants/routes';
 import { auth } from '../../firebase';
-import FormLayout from '../../hoc/formLayout/formLayout';
+import * as routes from '../../constants/routes';
+import FormLayout from '../../hoc/formLayout';
 
 const INITIAL_STATE = {
-  username: '',
   email: '',
-  passwordOne: '',
-  passwordTwo: '',
+  password: '',
   error: null,
 };
 
@@ -17,7 +16,7 @@ const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value,
 });
 
-export default class Register extends React.Component {
+export default class Login extends React.Component {
   constructor(props) {
     super(props);
 
@@ -26,6 +25,7 @@ export default class Register extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+
   /**
    * Handle submit button
    * @param event
@@ -33,15 +33,15 @@ export default class Register extends React.Component {
   onSubmit(event) {
     const {
       email,
-      passwordOne
+      password,
     } = this.state;
 
     const {history} = this.props;
 
-    auth.doCreateUserWithEmailAndPassword(email, passwordOne)
-      .then(authUser => {
+    auth.doSignInWithEmailAndPassword(email, password)
+      .then(() => {
         this.setState(() => ({ ...INITIAL_STATE }));
-        history.push(routes.LOGIN);
+        history.push(routes.DASHBOARD);
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
@@ -52,30 +52,16 @@ export default class Register extends React.Component {
 
   render() {
     const {
-      username,
       email,
-      passwordOne,
-      passwordTwo,
+      password,
       error
     } = this.state;
 
-    const isInvalid =
-      passwordOne !== passwordTwo ||
-      passwordOne === '' ||
-      email === '' ||
-      username === '';
+    const isInvalid = password === '' || email === '';
 
     return (
       <FormLayout>
         <Form onSubmit={this.onSubmit}>
-          <FormGroup>
-            <Input
-              value={username}
-              onChange={event => this.setState(byPropKey('username', event.target.value))}
-              type="text"
-              placeholder="Full Name"
-            />
-          </FormGroup>
           <FormGroup>
             <Input
               value={email}
@@ -86,25 +72,18 @@ export default class Register extends React.Component {
           </FormGroup>
           <FormGroup>
             <Input
-              value={passwordOne}
-              onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
+              value={password}
+              onChange={event => this.setState(byPropKey('password', event.target.value))}
               type="password"
               placeholder="Password"
             />
           </FormGroup>
-          <FormGroup>
-            <Input
-              value={passwordTwo}
-              onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
-              type="password"
-              placeholder="Confirm Password"
-            />
-          </FormGroup>
-          <Button disabled={isInvalid} type="submit" color="primary" block>Register</Button>
+          <Button disabled={isInvalid} color="primary" block>Log in</Button>
           { error && <p>{error.message}</p> }
         </Form>
+        <p>No account? Click here to</p>
+        <Link to="/register">Register</Link>
       </FormLayout>
     )
   }
 }
-

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Register from '../../containers/Register/Register';
+import Register from '../../containers/Register';
 import {withRouter} from "react-router-dom";
 
 const SignUpPage = ({ history }) =>
