@@ -23,11 +23,7 @@ const EMPTY_PASSWORD = {
 };
 
 export default class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {...INITIAL_STATE};
-  }
+  state = {...INITIAL_STATE};
 
   componentWillMount() {
     this.getPasswords();

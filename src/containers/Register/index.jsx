@@ -18,19 +18,13 @@ const byPropKey = (propertyName, value) => () => ({
 });
 
 export default class Register extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { ...INITIAL_STATE };
-
-    this.onSubmit = this.onSubmit.bind(this);
-  }
+  state = { ...INITIAL_STATE };
 
   /**
    * Handle submit button
    * @param event
    */
-  onSubmit(event) {
+  onSubmit = (event) => {
     const {
       email,
       passwordOne

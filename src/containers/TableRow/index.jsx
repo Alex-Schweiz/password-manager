@@ -7,26 +7,19 @@ const INITIAL_STATE = {
 };
 
 export default class TableRow extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {...INITIAL_STATE};
-
-    this.revealPassword = this.revealPassword.bind(this);
-    this.toggleTooltip = this.toggleTooltip.bind(this);
-  }
+  state = {...INITIAL_STATE};
 
   /**
    * Reveals real password instead of "*"
    */
-  revealPassword() {
+  revealPassword = () => {
     this.setState({hiddenItem: false})
   };
 
   /**
    * Controls tooltip state
    */
-  toggleTooltip() {
+  toggleTooltip = () => {
     this.setState({tooltipIsOpen: !this.state.tooltipIsOpen});
   };
 
