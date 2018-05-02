@@ -1,31 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Row, Col, Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 
-import { Container, Row, Col } from 'reactstrap';
+import SignOutButton from '../../components/SignOutButton/SignOutButton';
 
-import SignOutButton from '../../components/SignOutButton/SignOutButton'
-
-class Layout extends Component {
-  state = {};
-
+export default class Layout extends React.Component {
   render () {
     return (
       <div>
-        <Row>
-          <Col sm="2">.col-sm-2</Col>
-          <Col sm="10">
-            <Container>
-              <Row className="bg-secondary p-2">
+        <Row className="bg-dark">
+          <Navbar>
+            <NavbarBrand className="text-white">Password Manager</NavbarBrand>
+            <Nav>
+              <NavItem>
                 <SignOutButton />
-              </Row>
-              <main>
-                {this.props.children}
-              </main>
-            </Container>
+              </NavItem>
+            </Nav>
+          </Navbar>
+        </Row>
+        <Row>
+          <Col sm="2" className="bg-dark">
+            <NavItem className="text-white">
+              Dashboard
+            </NavItem>
+          </Col>
+          <Col sm="10">
+            <main className="m-4">
+              {this.props.children}
+            </main>
           </Col>
         </Row>
       </div>
     )
   }
 }
-
-export default Layout;

@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Redirect
 } from 'react-router-dom';
 
 import * as routes from './constants/routes';
 import { firebase } from './firebase';
 
 import Dashboard from './containers/Dashboard/Dashboard';
-import SignUpPage from './containers/Register/Register';
-import SignInPage from './containers/Login/Login';
+import SignUpPage from './components/SignUpPage/SignUpPage';
+import SignInPage from './components/SignInPage/SignInPage';
 
 class App extends Component {
   state = {
@@ -40,6 +41,17 @@ class App extends Component {
             exact path={routes.REGISTER}
             component={() => <SignUpPage />}
           />
+          {this.state.authUser ?
+            <div>
+              <Route
+                exact path={routes.REGISTER}
+                component={() => <Dashboard />}
+              />
+              <Redirect to="/" />
+            </div>
+            :
+            <Redirect to="/login" />
+          }
         </div>
       </Router>
     );

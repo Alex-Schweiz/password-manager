@@ -1,13 +1,14 @@
 import React from 'react';
-import { Button } from 'reactstrap';
+import { NavLink } from 'reactstrap';
 
 import { auth } from '../../firebase';
 
-const SignOutButton = () =>
-  <Button
-    color="primary"
-    onClick={auth.doSignOut}
-  >Log out
-  </Button>;
-
-export default SignOutButton;
+export default function SignOutButton () {
+  return (
+    <NavLink
+      href="#"
+      onClick={auth.doSignOut}
+      className="text-white"
+    >Log out</NavLink>
+  )
+};

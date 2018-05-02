@@ -1,14 +1,22 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
-class FormModal extends React.Component {
-  state = {
-    passwordItem: {
-      target: '',
-      password: '',
-      description: ''
-    }
-  };
+const INITIAL_STATE = {
+  passwordItem: {
+    target: '',
+    password: '',
+    description: ''
+  }
+};
+
+export default class FormModal extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { ...INITIAL_STATE };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
 
   componentDidUpdate () {
     if (this.props.activePassword !== this.state.passwordItem) {
@@ -16,17 +24,20 @@ class FormModal extends React.Component {
     }
   }
 
-  handleChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
+  /**
+   * Handle change on form fields
+   * @param event
+   */
+  handleChange(event) {
+    const [value, name] = [event.target.value, event.target.name];
     const oldPassword = this.state.passwordItem;
     oldPassword[name] = value;
-    this.setState({
-      passwordItem: oldPassword
-    });
+    this.setState({passwordItem: oldPassword});
   };
 
+  /**
+   * Handling saving form state
+   */
   handleSaveForm() {
     let savedForm = this.state.passwordItem;
     console.log(savedForm);
@@ -35,10 +46,6 @@ class FormModal extends React.Component {
     } else {
       this.props.saveItem(savedForm);
     }
-    this.props.toggleShowModal();
-  };
-
-  handleCancelButton() {
     this.props.toggleShowModal();
   };
 
@@ -91,5 +98,3 @@ class FormModal extends React.Component {
     )
   }
 }
-
-export default FormModal;

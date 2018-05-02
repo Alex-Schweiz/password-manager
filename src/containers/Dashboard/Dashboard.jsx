@@ -1,28 +1,64 @@
 import React from 'react';
+import axios from 'axios';
+import { Button, Table, Row } from 'reactstrap';
 
-import { Button, Table, Alert, Row } from 'reactstrap';
-
+import Layout from '../../hoc/dashboardLayout/dashboardLayout';
 import TableRow from '../TableRow/TableRow';
 import FormModal from '../FormModal/FormModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
 
-import DashboardLayout from '../../hoc/DashboardLayout/DashboardLayout';
+const INITIAL_STATE = {
+  isLoading: false,
+  activePassword: {},
+  passwords: [],
+  idDelete: '',
+  showModal: false,
+  showDeleteModal: false
+};
 
-import axios from 'axios';
+const EMPTY_PASSWORD = {
+  target: '',
+  password: '',
+  description: ''
+};
 
-class Dashboard extends React.Component {
-  state = {
-    isLoading: false,
-    activePassword: {},
-    passwords: [],
-    idDelete: '',
-    showModal: false,
-    showDeleteModal: false
-  };
+export default class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {...INITIAL_STATE};
+  }
 
   componentWillMount() {
     this.getPasswords();
   }
+
+  handleEditMode = (singlePassword) => {
+    this.setState({activePassword: {...singlePassword}});
+    this.toggleShowModal();
+  };
+
+  handleDeleteMode = (id) => {
+    this.setState({idDelete: id});
+    this.toggleDeleteModal();
+  };
+
+  toggleShowModal = () => {
+    this.setState({showModal: !this.state.showModal});
+  };
+
+  toggleDeleteModal = () => {
+    this.setState({showDeleteModal: !this.state.showDeleteModal});
+  };
+
+  setEmptyPassword() {
+    this.setState({activePassword : {...EMPTY_PASSWORD}});
+  };
+
+  handleCancelButton = () => {
+    this.setEmptyPassword();
+    this.toggleShowModal();
+  };
 
   getPasswords() {
     let downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
@@ -38,51 +74,6 @@ class Dashboard extends React.Component {
           });
         this.setState({passwords: arrayToPush});
       })
-  }
-
-  handleEditMode = (singlePassword) => {
-    this.setState({activePassword: {...singlePassword}});
-    this.toggleShowModal();
-  };
-
-  handleDeleteMode = (id) => {
-    this.setState({idDelete: id});
-    this.toggleDeleteModal();
-  };
-
-  toggleShowModal = () => {
-    this.setState({
-      showModal: !this.state.showModal
-    });
-  };
-
-  toggleDeleteModal = () => {
-    this.setState({
-      showDeleteModal: !this.state.showDeleteModal
-    });
-  };
-
-  setEmptyPassword() {
-    this.setState({
-      activePassword : {
-        target: '',
-        password: '',
-        description: ''
-      }
-    })
-  };
-
-  deletePassword = () => {
-    let idToDelete = this.state.idDelete;
-    let deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
-    axios.delete(deleteUrl)
-      .then(response => {
-        console.log(response);
-        if(response.status === 200) {
-          this.getPasswords();
-        }
-      });
-    this.toggleDeleteModal();
   };
 
   postPasswordItem = (postObject) => {
@@ -111,14 +102,37 @@ class Dashboard extends React.Component {
     this.setEmptyPassword();
   };
 
-  handleCancelButton = () => {
-    this.setEmptyPassword();
-    this.toggleShowModal();
+  deletePassword = () => {
+    let idToDelete = this.state.idDelete;
+    let deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
+    axios.delete(deleteUrl)
+      .then(response => {
+        console.log(response);
+        if(response.status === 200) {
+          this.getPasswords();
+        }
+      });
+    this.toggleDeleteModal();
   };
 
   render() {
+    const tableRow = (
+      this.state.passwords.map((passwordObject, i) => {
+        return (
+          <TableRow
+            key={passwordObject.id}
+            number={i}
+            revealPassword={() => this.revealPassword()}
+            singlePassword={passwordObject}
+            handleDeletePassword={this.handleDeleteMode}
+            handleEditMode={this.handleEditMode}
+          />
+        )
+      })
+    );
+
     return (
-      <DashboardLayout>
+      <Layout>
         <Row className="mt-3 mb-3 d-flex justify-content-between">
           <h2>Your passwords</h2>
           <Button color="success" onClick={this.toggleShowModal}>Add a password</Button>
@@ -137,7 +151,7 @@ class Dashboard extends React.Component {
           closeModal={this.toggleDeleteModal}
           idItemToDelete={this.state.idDelete}
         />
-        <Table hover striped>
+        <Table hover striped responsive>
           <thead>
           <tr>
             <th>#</th>
@@ -148,26 +162,13 @@ class Dashboard extends React.Component {
           </tr>
           </thead>
           <tbody>
-          {this.state.passwords.map((passwordObject, i) => {
-            return (
-              <TableRow
-                key={i}
-                number={i}
-                revealPassword={() => this.revealPassword()}
-                singlePassword={passwordObject}
-                handleDeletePassword={this.handleDeleteMode}
-                handleEditMode={this.handleEditMode}
-              />
-            )
-          })}
+          {tableRow}
           </tbody>
         </Table>
-        <Alert color="primary">
+        {/*<Alert color="primary">
           This is a primary alert — check it out!
-        </Alert>
-      </DashboardLayout>
+        </Alert>*/}
+      </Layout>
     )
   }
-};
-
-export default Dashboard;
+}
