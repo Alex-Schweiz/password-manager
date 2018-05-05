@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { Button, Table, Row } from 'reactstrap';
 
 import Layout from '../../components/DashboardLayout';
 import TableRow from '../TableRow';
 import FormModal from '../FormModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+
+import {requestPasswords} from '../../actions/password-actions';
 
 const INITIAL_STATE = {
   isLoading: false,
@@ -22,11 +25,15 @@ const EMPTY_PASSWORD = {
   description: ''
 };
 
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
   state = {...INITIAL_STATE};
 
   componentWillMount() {
-    this.getPasswords();
+    // this.getPasswords()
+  }
+
+  componentDidMount() {
+    this.props.requestPasswords();
   }
 
   handleEditMode = (singlePassword) => {
@@ -106,8 +113,16 @@ export default class Dashboard extends React.Component {
   };
 
   render() {
+    const passwordArrayToPush = Object.keys(this.props.passwordsStore)
+      .map(i => {
+        return {
+          ...this.props.passwordsStore[i],
+          id: i
+        }
+      });
+
     const tableRow = (
-      this.state.passwords.map((passwordObject, i) => {
+      passwordArrayToPush.map((passwordObject, i) => {
         return (
           <TableRow
             key={passwordObject.id}
@@ -159,3 +174,14 @@ export default class Dashboard extends React.Component {
     )
   }
 }
+
+// Make contacts  array available in  props
+function mapStateToProps(state) {
+  return {
+    passwordsStore : state.passwordStore.passwords,
+    loading: state.passwordStore.loading,
+    errors: state.passwordStore.errors
+  }
+}
+
+export default connect(mapStateToProps, {requestPasswords})(Dashboard);

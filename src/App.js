@@ -12,7 +12,7 @@ import Dashboard from './containers/Dashboard';
 import SignUpPage from './components/SignUpPage';
 import SignInPage from './components/SignInPage';
 
-class App extends Component {
+export default class App extends Component {
   state = {authUser: null};
 
   componentWillMount() {
@@ -55,5 +55,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
