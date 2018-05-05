@@ -14,7 +14,10 @@ export const GET_PASSWORDS = 'GET_PASSWORDS';
 export const FETCH_PASSWORDS_FULFILLED = 'FETCH_PASSWORDS_FULFILLED';
 
 export const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
+export const UPDATE_PASSWORD_FULFILLED = 'UPDATE_PASSWORD_FULFILLED';
+
 export const DELETE_PASSWORD = 'DELETE_PASSWORD';
+export const DELETE_PASSWORD_FULFILLED = 'DELETE_PASSWORD_FULFILLED';
 
 /*
  * action creators
@@ -23,7 +26,7 @@ export const DELETE_PASSWORD = 'DELETE_PASSWORD';
 export function requestPasswords() {
   return dispatch => {
     dispatch({type: GET_PASSWORDS});
-    /*const request = password.get(`${url}.json`);*/
+
     const request = axios({
       method: 'GET',
       url: `${url}.json`
@@ -41,7 +44,6 @@ export function fetchPasswordsSuccess(passwords) {
   }
 }
 
-//
 export function addPassword(passwordItem) {
   return dispatch => {
     dispatch({type: ADD_PASSWORD});
@@ -53,36 +55,57 @@ export function addPassword(passwordItem) {
     });
 
     return request
-      .then(response => dispatch(addPasswordsSuccess(response.data)))
-      .then(dispatch(requestPasswords))
+      .then(() => dispatch(addPasswordFulfiled()))
+      .then(() => dispatch(requestPasswords()))
   }
 }
 
-export function addPasswordsSuccess() {
+export function addPasswordFulfiled() {
   return  {
     type: ADD_PASSWORDS_FULFILLED
   }
 }
 
 
-
-
-
-
 export function updatePassword(passwordItem) {
   return dispatch => {
-    dispatch({
-      type: UPDATE_PASSWORD,
-      payload: password.put(`${url}/${passwordItem.id}.json`, passwordItem)
-    })
+    dispatch({type: UPDATE_PASSWORD});
+
+    const request = axios({
+      method: 'PUT',
+      url: `${url}/${passwordItem.id}.json`,
+      data: passwordItem
+    });
+
+    return request
+      .then(() => dispatch(updatePasswordFulfiled()))
+      .then(() => dispatch(requestPasswords()))
+  }
+}
+
+export function updatePasswordFulfiled() {
+  return  {
+    type: UPDATE_PASSWORD_FULFILLED
   }
 }
 
 export function deletePassword(id) {
   return dispatch => {
-    dispatch({
-      type: DELETE_PASSWORD,
-      payload: password.delete(`${url}/${id}.json`)
-    })
+    dispatch({type: DELETE_PASSWORD});
+
+    const request = axios({
+      method: 'DELETE',
+      url: `${url}/${id}.json`
+    });
+
+    return request
+      .then(() => dispatch(deletePasswordFulfiled()))
+      .then(() => dispatch(requestPasswords()))
+  }
+}
+
+export function deletePasswordFulfiled() {
+  return  {
+    type: DELETE_PASSWORD_FULFILLED
   }
 }

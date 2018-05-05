@@ -8,7 +8,7 @@ import TableRow from '../TableRow';
 import FormModal from '../FormModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
-import {requestPasswords} from '../../actions/password-actions';
+import {requestPasswords, addPassword, updatePassword, deletePassword} from '../../actions/password-actions';
 
 const INITIAL_STATE = {
   isLoading: false,
@@ -29,10 +29,6 @@ class Dashboard extends React.Component {
   state = {...INITIAL_STATE};
 
   componentWillMount() {
-    // this.getPasswords()
-  }
-
-  componentDidMount() {
     this.props.requestPasswords();
   }
 
@@ -63,52 +59,18 @@ class Dashboard extends React.Component {
     this.toggleShowModal();
   };
 
-  getPasswords() {
-    const downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
-    axios.get(downloadUrl)
-      .then(response => {
-        const arrayToPush = Object.keys(response.data)
-          .map(i => {
-            return {
-              ...response.data[i],
-              id: i
-            }
-          });
-        this.setState({passwords: arrayToPush});
-      })
-  };
-
   postPasswordItem = (postObject) => {
-    const downloadUrl = 'https://react-password-manager-7.firebaseio.com/passwords.json';
-    axios.post(downloadUrl, postObject)
-      .then(response => {
-        if(response.status === 200) {
-          this.getPasswords();
-        }
-      });
+    this.props.addPassword(postObject);
     this.setEmptyPassword();
   };
 
-  updateItem = (updateObject, id) => {
-    const downloadUrl = `https://react-password-manager-7.firebaseio.com/passwords/${id}.json`;
-    axios.put(downloadUrl, updateObject)
-      .then(response => {
-        if(response.status === 200) {
-          this.getPasswords();
-        }
-      });
+  updateItem = (updateObject) => {
+    this.props.updatePassword(updateObject);
     this.setEmptyPassword();
   };
 
   deletePassword = () => {
-    const idToDelete = this.state.idDelete;
-    const deleteUrl = `https://react-password-manager-7.firebaseio.com/passwords/${idToDelete}.json`;
-    axios.delete(deleteUrl)
-      .then(response => {
-        if(response.status === 200) {
-          this.getPasswords();
-        }
-      });
+    this.props.deletePassword(this.state.idDelete);
     this.toggleDeleteModal();
   };
 
@@ -184,4 +146,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {requestPasswords})(Dashboard);
+export default connect(mapStateToProps, {requestPasswords, addPassword, updatePassword, deletePassword})(Dashboard);

@@ -35,7 +35,22 @@ export default (state = defaultState, action = {}) => {
     case 'ADD_PASSWORDS_FULFILLED': {
       return {
         ...state,
-        passwords: action.payload,
+        loading: false,
+        errors: {}
+      }
+    }
+
+    case 'UPDATE_PASSWORD_FULFILLED': {
+      return {
+        ...state,
+        loading: false,
+        errors: {}
+      }
+    }
+
+    case 'DELETE_PASSWORD_FULFILLED': {
+      return {
+        ...state,
         loading: false,
         errors: {}
       }
