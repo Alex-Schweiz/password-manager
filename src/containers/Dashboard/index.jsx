@@ -73,33 +73,37 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    const passwordArrayToPush = Object.keys(this.props.passwordsStore)
+    const passwordArrayToPush = this.props.passwordsStore ?
+      Object.keys(this.props.passwordsStore)
       .map(i => {
         return {
           ...this.props.passwordsStore[i],
           id: i
         }
-      });
-
-    const tableRow = (
-      passwordArrayToPush.map((passwordObject, i) => {
-        return (
-          <TableRow
-            key={passwordObject.id}
-            number={i}
-            revealPassword={() => this.revealPassword()}
-            singlePassword={passwordObject}
-            handleDeletePassword={this.handleDeleteMode}
-            handleEditMode={this.handleEditMode}
-          />
-        )
       })
-    );
+    : null;
+
+    const tableRow = passwordArrayToPush ?
+      (
+        passwordArrayToPush.map((passwordObject, i) => {
+          return (
+            <TableRow
+              key={passwordObject.id}
+              number={i}
+              revealPassword={() => this.revealPassword()}
+              singlePassword={passwordObject}
+              handleDeletePassword={this.handleDeleteMode}
+              handleEditMode={this.handleEditMode}
+            />
+          )
+        })
+      )
+    : null;
 
     return (
       <Layout>
         <Row className="mt-3 mb-3 d-flex justify-content-between">
-          <h2>Your passwords</h2>
+          <h2>{passwordArrayToPush ? "Your passwords" : "You don't have any passwords yet. Add your first password"}</h2>
           <Button color="success" onClick={this.toggleShowModal}>Add a password</Button>
         </Row>
         <FormModal
@@ -116,20 +120,27 @@ class Dashboard extends React.Component {
           closeModal={this.toggleDeleteModal}
           idItemToDelete={this.state.idDelete}
         />
-        <Table hover striped responsive>
-          <thead>
-          <tr>
-            <th>#</th>
-            <th>Target</th>
-            <th>Password</th>
-            <th>Description</th>
-            <th className="actions-width">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          {tableRow}
-          </tbody>
-        </Table>
+        {
+          passwordArrayToPush ?
+            (
+              <Table hover striped responsive>
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Target</th>
+                  <th>Password</th>
+                  <th>Description</th>
+                  <th className="actions-width">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {tableRow}
+                </tbody>
+              </Table>
+            )
+            : null
+        }
+
       </Layout>
     )
   }
