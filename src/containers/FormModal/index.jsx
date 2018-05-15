@@ -1,22 +1,17 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 
 const INITIAL_STATE = {
   passwordItem: {
     target: '',
     password: '',
     description: ''
-  }
+  },
+  fieldErrors: {},
 };
 
 export default class FormModal extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { ...INITIAL_STATE };
-
-    this.handleChange = this.handleChange.bind(this);
-  }
+  state = { ...INITIAL_STATE };
 
   componentDidUpdate () {
     if (this.props.activePassword !== this.state.passwordItem) {
@@ -28,33 +23,39 @@ export default class FormModal extends React.Component {
    * Handle change on form fields
    * @param event
    */
-  handleChange(event) {
-    const [value, name] = [event.target.value, event.target.name];
-    const oldPassword = this.state.passwordItem;
-    oldPassword[name] = value;
-    this.setState({passwordItem: oldPassword});
+  handleChange = (event) => {
+    const passwordItem = this.state.passwordItem;
+    passwordItem[event.target.name] = event.target.value;
+    this.setState({passwordItem});
   };
 
   /**
    * Handling saving form state
    */
   handleSaveForm() {
-    let savedForm = this.state.passwordItem;
+    const passwordItem = this.state.passwordItem;
+    const fieldErrors = this.validate(passwordItem);
+
+    // Check if there are any errors
+    if (Object.keys(fieldErrors).length) return;
+
     if(this.state.passwordItem.id) {
-      this.props.updateItem(savedForm, this.state.passwordItem.id);
+      this.props.updateItem(passwordItem, this.state.passwordItem.id);
     } else {
-      this.props.saveItem(savedForm);
+      this.props.saveItem(passwordItem);
     }
     this.props.toggleShowModal();
   };
 
-  render() {
-    const {
-      target,
-      password
-    } = this.state;
+  validate = (passwordItem) => {
+    const fieldErrors = {};
+    if (!passwordItem.target) fieldErrors.target = 'Target is required';
+    if (!passwordItem.password) fieldErrors.password = 'Password is required';
+    this.setState({fieldErrors});
+    return fieldErrors;
+  };
 
-    const isInvalid = password === '' || target === '';
+  render() {
 
     return (
       <Modal isOpen={this.props.showModal} toggle={this.props.toggleShowModal}>
@@ -66,29 +67,30 @@ export default class FormModal extends React.Component {
               <Input
                 type="text"
                 name="target"
-                id="target"
                 placeholder="Your target"
+                invalid={this.state.fieldErrors.target}
                 value={this.state.passwordItem.target}
                 onChange={this.handleChange}
               />
+              <FormFeedback>{this.state.fieldErrors.target}</FormFeedback>
             </FormGroup>
             <FormGroup>
               <Label for="password">Password</Label>
               <Input
                 type="text"
                 name="password"
-                id="password"
                 placeholder="Your password"
+                invalid={this.state.fieldErrors.password}
                 value={this.state.passwordItem.password}
                 onChange={this.handleChange}
               />
+              <FormFeedback>{this.state.fieldErrors.password}</FormFeedback>
             </FormGroup>
             <FormGroup>
               <Label for="description">Description</Label>
               <Input
                 type="textarea"
                 name="description"
-                id="description"
                 placeholder="Description"
                 value={this.state.passwordItem.description}
                 onChange={this.handleChange}
@@ -100,7 +102,6 @@ export default class FormModal extends React.Component {
           <Button
             color="success"
             onClick={() => this.handleSaveForm()}
-            disabled={isInvalid}
           >
             Save
           </Button>{' '}

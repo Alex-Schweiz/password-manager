@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { Button, Table, Row } from 'reactstrap';
 
@@ -13,7 +12,6 @@ import {requestPasswords, addPassword, updatePassword, deletePassword} from '../
 const INITIAL_STATE = {
   isLoading: false,
   activePassword: {},
-  passwords: [],
   idDelete: '',
   showModal: false,
   showDeleteModal: false
@@ -137,7 +135,7 @@ class Dashboard extends React.Component {
   }
 }
 
-// Make contacts  array available in  props
+// Make password  array available in  props
 function mapStateToProps(state) {
   return {
     passwordsStore : state.passwordStore.passwords,
